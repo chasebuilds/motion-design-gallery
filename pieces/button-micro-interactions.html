@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Button micro-interactions</title>
+<style>
+  :root { --ink: #1f2430; --accent: #1d4ed8; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f1f5fd; color: var(--ink); font-family: system-ui, sans-serif; }
+  .row { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; padding: 20px; }
+  .btn { position: relative; overflow: hidden; padding: 12px 26px; border: 0; border-radius: 12px; background: var(--accent); color: #fff; font: inherit; font-weight: 600; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.2s ease; box-shadow: 0 4px 12px rgb(29 78 216 / 30%); }
+  .btn:hover { box-shadow: 0 8px 20px rgb(29 78 216 / 40%); }
+  .btn:active { transform: scale(0.96); }
+  .btn:focus-visible { outline: 3px solid #93b4ff; outline-offset: 3px; }
+  .ripple { position: absolute; border-radius: 50%; background: rgb(255 255 255 / 45%); transform: scale(0); animation: ripple 0.6s ease-out forwards; pointer-events: none; }
+  .magnet { transition: transform 0.2s ease-out; }
+  .state { min-width: 140px; }
+  .state[data-state="loading"]::before { content: ""; display: inline-block; width: 12px; height: 12px; margin-right: 8px; border: 2px solid rgb(255 255 255 / 40%); border-top-color: #fff; border-radius: 50%; vertical-align: -2px; animation: spin 0.7s linear infinite; }
+  .state[data-state="done"] { background: #15803d; }
+  @keyframes ripple { to { transform: scale(1); opacity: 0; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .btn, .btn:active { transition: none; transform: none; }
+    .ripple { display: none; }
+    .state[data-state="loading"]::before { animation: none; }
+  }
+</style>
+</head>
+<body>
+<div class="row">
+  <button type="button" class="btn ripple-host">Ripple</button>
+  <button type="button" class="btn magnet" id="magnet">Magnetic</button>
+  <button type="button" class="btn state" id="state" data-state="idle">Send request</button>
+</div>
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 1. Ripple from the click position.
+  document.querySelector('.ripple-host').addEventListener('click', (e) => {
+    const b = e.currentTarget;
+    const r = b.getBoundingClientRect();
+    const size = Math.max(r.width, r.height) * 2;
+    const dot = document.createElement('span');
+    dot.className = 'ripple';
+    dot.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+    b.append(dot);
+    dot.addEventListener('animationend', () => dot.remove());
+  });
+
+  // 2. Magnetic pull: the button leans a few pixels toward the pointer.
+  const magnet = document.getElementById('magnet');
+  if (!reduce) {
+    magnet.addEventListener('pointermove', (e) => {
+      const r = magnet.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+      const dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+      magnet.style.transform = `translate(${dx * 10}px, ${dy * 10}px)`;
+    });
+    magnet.addEventListener('pointerleave', () => { magnet.style.transform = ''; });
+  }
+
+  // 3. Idle -> loading -> done state button.
+  const state = document.getElementById('state');
+  const labels = { idle: 'Send request', loading: 'Sending', done: 'Sent' };
+  function setState(s) {
+    state.dataset.state = s;
+    state.textContent = labels[s];
+    state.disabled = s === 'loading';
+  }
+  state.addEventListener('click', () => {
+    setState('loading');
+    setTimeout(() => setState('done'), 1200);
+    setTimeout(() => setState('idle'), 2800);
+  });
+</script>
+</body>
+</html>

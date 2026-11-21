@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hero text reveal</title>
+<style>
+  :root { --ink: #1f2430; --accent: #d9622b; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #fbf6ef; color: var(--ink); font-family: system-ui, sans-serif; }
+  .hero { padding: 24px; text-align: center; }
+  .headline { margin: 0; font-size: clamp(2rem, 7vw, 3.6rem); line-height: 1.1; }
+  /* Each word sits in a clipping mask; the inner span slides up into view. */
+  .word { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; }
+  .word > span { display: inline-block; transform: translateY(110%); animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; animation-delay: calc(var(--i) * 70ms); }
+  .sub { margin: 16px 0 0; opacity: 0; animation: fade 0.6s ease 0.7s forwards; }
+  .accent { color: var(--accent); }
+  button { margin-top: 20px; padding: 10px 18px; border: 0; border-radius: 999px; background: var(--ink); color: #fff; font: inherit; cursor: pointer; }
+  @keyframes rise { to { transform: translateY(0); } }
+  @keyframes fade { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .word > span, .sub { animation: none; transform: none; opacity: 1; }
+  }
+</style>
+</head>
+<body>
+<section class="hero">
+  <h1 class="headline" id="headline">Fresh bread, baked before sunrise</h1>
+  <p class="sub">Order by 9pm, pick up warm at 7am.</p>
+  <button type="button" id="replay">Replay</button>
+</section>
+<script>
+  const headline = document.getElementById('headline');
+  const text = headline.textContent.trim();
+
+  function build() {
+    headline.textContent = '';
+    headline.setAttribute('aria-label', text);
+    text.split(' ').forEach((w, i) => {
+      const outer = document.createElement('span');
+      outer.className = 'word';
+      outer.setAttribute('aria-hidden', 'true');
+      const inner = document.createElement('span');
+      inner.textContent = w;
+      if (w === 'sunrise') inner.className = 'accent';
+      inner.style.setProperty('--i', i);
+      outer.append(inner);
+      headline.append(outer, ' ');
+    });
+  }
+
+  build();
+  document.getElementById('replay').addEventListener('click', () => {
+    build();
+    const sub = document.querySelector('.sub');
+    sub.style.animation = 'none';
+    void sub.offsetWidth; // force reflow so the animation restarts
+    sub.style.animation = '';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scroll reveal</title>
+<style>
+  :root { --ink: #1f2430; --accent: #2a7f78; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 16px 20px 60px; background: #f4f8f7; color: var(--ink); font-family: system-ui, sans-serif; }
+  .hint { margin: 0 0 120px; text-align: center; color: #5b6572; }
+  .section { max-width: 520px; margin: 0 auto 140px; padding: 22px; border-radius: 14px; background: #fff; box-shadow: 0 6px 24px rgb(31 36 48 / 8%); }
+  .section h2 { margin: 0 0 8px; color: var(--accent); }
+  .section p { margin: 0; line-height: 1.5; }
+  /* Hidden state only applies when JS is running, so no-JS visitors still see content. */
+  .js .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .js .reveal.from-left { transform: translateX(-32px); }
+  .js .reveal.is-visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .js .reveal, .js .reveal.from-left { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body>
+<p class="hint">Scroll down</p>
+<section class="section reveal"><h2>Services</h2><p>Plain list of what you do and what it costs.</p></section>
+<section class="section reveal from-left"><h2>Process</h2><p>Three steps from first call to finished job.</p></section>
+<section class="section reveal"><h2>Reviews</h2><p>Real quotes from real customers, with names.</p></section>
+<section class="section reveal from-left"><h2>Contact</h2><p>Phone, hours and a short form.</p></section>
+<script>
+  document.documentElement.classList.add('js');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target); // reveal once, then stop watching
+    });
+  }, { threshold: 0.25 });
+  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+</script>
+</body>
+</html>

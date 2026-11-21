@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motion Design Gallery</title>
+<meta name="description" content="Eleven copy-paste web animation pieces in plain HTML, CSS and JavaScript, each with a live demo and its full source.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23d9622b'/%3E%3Cpath d='M8 20 Q16 6 24 20' stroke='white' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="backdrop" aria-hidden="true"></div>
+<header class="top">
+  <nav class="pill" aria-label="Page">
+    <a href="#gallery">Gallery</a>
+    <a href="#notes">Notes</a>
+    <a href="https://github.com/chasebuilds/motion-design-gallery">Source</a>
+  </nav>
+  <h1>Motion Design Gallery</h1>
+  <p class="lead">Eleven small animations for business websites. Each one is a single HTML file with no libraries. Watch it run, then copy the code.</p>
+</header>
+
+<main id="gallery" class="grid" aria-live="polite">
+  <p class="loading-msg">Loading pieces</p>
+</main>
+
+<section id="notes" class="notes glass">
+  <h2>How these are built</h2>
+  <ul>
+    <li><strong>Reduced motion.</strong> Every piece checks <code>prefers-reduced-motion</code> and shows the finished state without moving.</li>
+    <li><strong>Cheap to animate.</strong> Pieces animate <code>transform</code> and <code>opacity</code> only, so the browser can run them off the main thread.</li>
+    <li><strong>Self-contained.</strong> Each demo runs in a sandboxed frame. The code view shows the exact file that is running.</li>
+  </ul>
+</section>
+<footer class="foot">Chase Builds. MIT license.</footer>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page transition</title>
+<style>
+  :root { --ink: #1f2430; --accent: #0f766e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: #f2faf9; color: var(--ink); font-family: system-ui, sans-serif; }
+  nav { display: flex; gap: 8px; justify-content: center; padding: 16px; }
+  nav button { padding: 8px 16px; border: 1px solid #b5dad6; border-radius: 999px; background: #fff; color: var(--ink); font: inherit; cursor: pointer; }
+  nav button[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  main { max-width: 480px; margin: 12px auto; padding: 0 20px; view-transition-name: page; }
+  h1 { margin: 0 0 8px; color: var(--accent); }
+  p { margin: 0; line-height: 1.5; }
+  /* Browsers with the View Transitions API slide the old page out and the new one in. */
+  ::view-transition-old(page) { animation: 0.25s ease both out; }
+  ::view-transition-new(page) { animation: 0.35s ease both in; }
+  @keyframes out { to { opacity: 0; transform: translateX(-24px); } }
+  @keyframes in { from { opacity: 0; transform: translateX(24px); } }
+  /* Fallback for browsers without it. */
+  main.swap { animation: in 0.35s ease both; }
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*), main.swap { animation: none; }
+  }
+</style>
+</head>
+<body>
+<nav aria-label="Pages">
+  <button type="button" data-page="home" aria-current="page">Home</button>
+  <button type="button" data-page="services">Services</button>
+  <button type="button" data-page="contact">Contact</button>
+</nav>
+<main id="view" aria-live="polite">
+  <h1>Home</h1>
+  <p>Welcome. Pick a tab to change the page.</p>
+</main>
+<script>
+  const pages = {
+    home: ['Home', 'Welcome. Pick a tab to change the page.'],
+    services: ['Services', 'Repairs, installs and yearly checkups.'],
+    contact: ['Contact', 'Call us or leave a message after hours.'],
+  };
+  const view = document.getElementById('view');
+
+  function render(key) {
+    view.querySelector('h1').textContent = pages[key][0];
+    view.querySelector('p').textContent = pages[key][1];
+    document.querySelectorAll('nav button').forEach((b) => {
+      if (b.dataset.page === key) b.setAttribute('aria-current', 'page');
+      else b.removeAttribute('aria-current');
+    });
+  }
+
+  document.querySelector('nav').addEventListener('click', (e) => {
+    const key = e.target.dataset.page;
+    if (!key) return;
+    if (document.startViewTransition) {
+      document.startViewTransition(() => render(key));
+    } else {
+      render(key);
+      view.classList.remove('swap');
+      void view.offsetWidth;
+      view.classList.add('swap');
+    }
+  });
+</script>
+</body>
+</html>

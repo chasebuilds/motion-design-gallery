@@ -1,0 +1,26 @@
+{
+  "name": "motion-design-gallery",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Eleven copy-paste web animation pieces in vanilla HTML, CSS and JS.",
+  "license": "MIT",
+  "scripts": {
+    "lint:js": "eslint .",
+    "lint:css": "stylelint \"styles.css\" \"pieces/*.html\"",
+    "lint:html": "html-validate index.html \"pieces/*.html\"",
+    "test": "node test/smoke.mjs",
+    "lint": "npm run lint:js && npm run lint:css && npm run lint:html",
+    "serve": "npx --yes serve ."
+  },
+  "devDependencies": {
+    "eslint": "10.15.0",
+    "eslint-plugin-html": "8.2.1",
+    "globals": "17.14.0",
+    "html-validate": "11.21.1",
+    "playwright": "^1.65.1",
+    "postcss-html": "2.0.1",
+    "stylelint": "18.1.0",
+    "stylelint-config-standard": "41.1.0"
+  }
+}
