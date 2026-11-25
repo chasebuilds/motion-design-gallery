@@ -71,3 +71,11 @@ Measured on the author's PC (Edge, 240 Hz display): the particle header averaged
 ## License
 
 MIT, see [LICENSE](LICENSE). Made by Chase Builds.
+
+## More from Chase Builds
+
+- **[cursor-fluid](https://github.com/chasebuilds/cursor-fluid)**: A dependency-free WebGL2 fluid background that follows the cursor, keeps hero text readable and scales quality to hold frame rate on phones. ([live demo](https://chasebuilds.github.io/cursor-fluid/))
+- **[r3f-showcase](https://github.com/chasebuilds/r3f-showcase)**: 3D product configurator, scroll hero and gallery wall for a business site. ([live demo](https://chasebuilds.github.io/r3f-showcase/))
+- **[liquid-logo-studio](https://github.com/chasebuilds/liquid-logo-studio)**: Turns any logo into animated liquid chrome or gold, ready to export or embed. ([live demo](https://chasebuilds.github.io/liquid-logo-studio/))
+
+[All projects, sorted by industry](https://github.com/chasebuilds) · [chasebuilds.github.io](https://chasebuilds.github.io)
