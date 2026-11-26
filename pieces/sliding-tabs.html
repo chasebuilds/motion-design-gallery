@@ -63,6 +63,14 @@
   });
   window.addEventListener('resize', () => moveBar(tabs.find((t) => t.getAttribute('aria-selected') === 'true')));
   moveBar(tabs[0]);
+
+  // Demo mode: play by itself until the visitor touches it. Off when reduced motion is on.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let auto = setInterval(() => { const i = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true'); select(tabs[(i + 1) % tabs.length]); }, 1800);
+    const stop = () => { clearInterval(auto); auto = 0; };
+    addEventListener('pointerdown', stop, { once: true }); addEventListener('keydown', stop, { once: true });
+    
+  }
 </script>
 </body>
 </html>

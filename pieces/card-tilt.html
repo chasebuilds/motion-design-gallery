@@ -54,6 +54,14 @@
     card.style.setProperty('--rx', '0deg');
     card.style.setProperty('--ry', '0deg');
   });
+
+  // Demo mode: play by itself until the visitor touches it. Off when reduced motion is on.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let auto = setInterval(() => { if (!auto) return; const t = performance.now() / 900; card.classList.add('is-active'); card.style.setProperty('--ry', `${Math.sin(t) * MAX * .8}deg`); card.style.setProperty('--rx', `${Math.cos(t * 1.3) * MAX * .5}deg`); card.style.setProperty('--gx', `${50 + Math.sin(t) * 40}%`); card.style.setProperty('--gy', `${50 - Math.cos(t * 1.3) * 30}%`); }, 50);
+    const stop = () => { clearInterval(auto); auto = 0; };
+    addEventListener('pointerdown', stop, { once: true }); addEventListener('keydown', stop, { once: true });
+    card.addEventListener('pointerenter', stop, { once: true });
+  }
 </script>
 </body>
 </html>

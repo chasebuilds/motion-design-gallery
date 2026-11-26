@@ -13,6 +13,8 @@ const PIECES = [
 ];
 
 const grid = document.getElementById('gallery');
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const LOOPS = { 'hero-text-reveal': 3600, 'animated-counters': 4200, 'svg-logo-draw': 5200, 'scroll-reveal': 4800 };
 
 function el(tag, props = {}, ...kids) {
   const node = Object.assign(document.createElement(tag), props);
@@ -54,12 +56,17 @@ function buildCard([id, title, desc], source) {
     setTimeout(() => { copyBtn.textContent = 'Copy the code'; }, 1800);
   });
 
-  // Start each demo only when its card is near the screen.
+  // Start each demo when its card is near the screen. One-shot demos replay on a loop while visible,
+  // and hold still while the pointer is over them so they can be inspected.
+  const loopMs = LOOPS[id];
+  let started = false, timer = 0, hovering = false;
+  stage.addEventListener('pointerenter', () => { hovering = true; });
+  stage.addEventListener('pointerleave', () => { hovering = false; });
   const io = new IntersectionObserver(([entry]) => {
-    if (!entry.isIntersecting) return;
-    frame.srcdoc = source;
-    io.disconnect();
-  }, { rootMargin: '200px' });
+    if (entry.isIntersecting && !started) { frame.srcdoc = source; started = true; }
+    clearInterval(timer);
+    if (entry.isIntersecting && loopMs && !REDUCED) timer = setInterval(() => { if (!hovering && !stage.hidden) frame.srcdoc = source; }, loopMs);
+  }, { rootMargin: '0px', threshold: 0.3 });
   io.observe(stage);
 
   show('demo');

@@ -65,6 +65,14 @@
       view.classList.add('swap');
     }
   });
+
+  // Demo mode: play by itself until the visitor touches it. Off when reduced motion is on.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let auto = setInterval(() => { const b = [...document.querySelectorAll('nav button')]; const i = b.findIndex((x) => x.hasAttribute('aria-current')); b[(i + 1) % b.length].click(); }, 2200);
+    const stop = () => { clearInterval(auto); auto = 0; };
+    addEventListener('pointerdown', stop, { once: true }); addEventListener('keydown', stop, { once: true });
+    
+  }
 </script>
 </body>
 </html>
